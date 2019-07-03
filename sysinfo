@@ -1,0 +1,44 @@
+#!/usr/bin/python
+
+import csv
+import psutil
+import platform
+import os
+
+#Get Info about memory
+x1 = psutil.virtual_memory()
+#Get info about Disk 
+x2 = psutil.disk_usage('/')
+#Get info about CPU
+x3 = psutil.cpu_times()
+x4 = psutil.cpu_count()
+#Get info about system paltform
+x5 = platform.uname()
+
+#Get Last 10 errors in dmesg(using by bash scripting)
+x6=os.popen('dmesg | head -10 ').read()
+
+
+
+#Get Top 10 Process
+count =1
+x7=''
+for j in psutil.pids():
+    x7 =x7+str(psutil.Process(j))     
+    count+=1
+    if count == 10 :
+       break
+
+ 
+#Export data to csv file 
+with open('file.csv','w') as f :
+     thewriter = csv.writer(f)
+     
+     thewriter.writerow(['Memory Info',x1])
+     thewriter.writerow(['Disk Usage',x2])
+     thewriter.writerow(['CPU Info',x3])
+     thewriter.writerow(['CPU Count',x4])
+     thewriter.writerow(['uname',x5])
+     thewriter.writerow(['Last 10 errors', x6])
+     thewriter.writerow(['Top 10 Processes',x7])
+     
